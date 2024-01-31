@@ -91,7 +91,7 @@ class ProxyFetcherAPI(ProxyFetcher):
         if format == 'JSON':
             try:
                 return response.json()
-            except Exception as e:
+            except Exception:
                 return str(response.text)
         else:
             return str(response.text)
