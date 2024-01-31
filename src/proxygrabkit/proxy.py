@@ -1,39 +1,33 @@
+
+import requests
 from dataclasses import dataclass
 from typing import Dict, Any
-import requests
-from requests import Response
-
+from requests import HTTPError
 @dataclass
-class Proxy:
-    """ Represent the information returned for a call to proxyrotator API
+class ProxyData:
+    """ Represent the information of one proxy
 
     Attributes:
-        proxy (str): proxy server
-        ip (str): server's ip
-        port (int): server's port
-        connectionType (str): "Residential", "Mobile", or "Datacenter"
-        asn (str): ASN network
-        isp (str): Internet Service Provider
-        type (str): ---
-        lastChecked (str): Last check in seconds
-        get (bool): Proxy support GET requests
-        post (bool): Proxy support POST requests
-        cookies (bool): Proxy support cookies
-        referer (bool): Proxy support referer header
-        userAgent (bool): Proxy support user-agent header
-        city (str): City
-        state (str): State
-        country (str): Country
-        randomUserAgent (str): -----
-        requestsRemaining (int): Requests Remaining
-    """
+        - source (str): Service used to get it.
+        - proxy (str): proxy server
+        - ip (str): server's ip
+        - port (int): server's port
+        - type (str): ---
+        - lastChecked (int): Last check in seconds
+        - get (bool): Proxy support GET requests
+        - post (bool): Proxy support POST requests
+        - cookies (bool): Proxy support cookies
+        - referer (bool): Proxy support referer header
+        - userAgent (bool): Proxy support user-agent header
+        - city (str): City
+        - state (str): State
+        - country (str): Country
 
+    """
+    source: str
     proxy: str
     ip: str
     port: int
-    connectionType: str
-    asn: str
-    isp: str
     type: str
     lastChecked: int
     get: bool
@@ -44,9 +38,8 @@ class Proxy:
     city: str
     state: str
     country: str
-    randomUserAgent: str
     requestsRemaining: int
-    
+
 
 class ProxyFetcher(object):
     def __init__(self) -> None:
@@ -55,9 +48,10 @@ class ProxyFetcher(object):
     def set_filter(self, **kwargs):
         raise Exception( 'This function must be implemented by classes that inherit from ProxyFetcher' )
  
-    def get_proxy(self) -> Proxy:
+    def get_proxy(self) -> ProxyData:
         raise Exception( 'This function must be implemented by classes that inherit from ProxyFetcher' )
-    
+
+
 class ProxyFetcherAPI(ProxyFetcher):
     def __init__(self, api_endpoint, valid_params) -> None:
         super().__init__()
@@ -83,17 +77,22 @@ class ProxyFetcherAPI(ProxyFetcher):
 
         return self._params
 
-    def _request_proxy(self, format :str = 'JSON' ) -> 'Response | None':
+    def _request_proxy(self, format :str = 'JSON' ) -> 'dict | str':
         try:
             response = requests.get(url=self._api_endpoint, params=self._params)
             response.raise_for_status()
             
-            if format == 'JSON':
-                return response.json()
-            else:
-                return response.content
-        except Exception as e:
+        except HTTPError as e:
             print(f"{type(e).__name__}: {e}")
-        
-        return None
+            
+        except Exception as e:
+            return f'{e}'
+
+        if format == 'JSON':
+            try:
+                return response.json()
+            except Exception as e:
+                return str(response.text)
+        else:
+            return str(response.text)
             
