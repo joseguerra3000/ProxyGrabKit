@@ -1,8 +1,24 @@
 
 from typing import Any, Dict
 
-from .proxy import Proxy as ProxyInfo, ProxyFetcherAPI 
+from .proxy import ProxyData, ProxyFetcherAPI
+from dataclasses import dataclass
 
+@dataclass
+class ProxyRP(ProxyData):
+    '''Represent the information returned for a call to Rotating Proxy API
+
+    Attributes:
+     - connectionType (str): "Residential", "Mobile", or "Datacenter"
+     - asn (str): ASN network
+     - isp (str): Internet Service Provider
+     - randomUserAgent (str): -----
+     - requestsRemaining (int): Requests Remaining
+    '''
+    connectionType: str
+    asn: str
+    isp: str
+    randomUserAgent: str
 
 class RotatingProxyClient(ProxyFetcherAPI):
     """Class for interacting with the Rotating Proxy API from proxyrotator.com.
@@ -114,7 +130,7 @@ class RotatingProxyClient(ProxyFetcherAPI):
         """
         return self.set_params(filter, kwargs=kwargs)
 
-    def get_proxy(self, filter: Dict[str, Any] = None) -> 'ProxyInfo | None':
+    def get_proxy(self, filter: Dict[str, Any] = None) -> ProxyRP:
         """Gets a proxy from the API.
 
         Returns
@@ -149,10 +165,10 @@ class RotatingProxyClient(ProxyFetcherAPI):
             self._remaining_requests = 0
             error = body['error']
             raise RotatingProxyException( error )
-            return None
 
         self._remaining_requests = body["requestsRemaining"]
-        return ProxyInfo(
+        return ProxyRP(
+            source = 'RotatingProxyAPI',
             proxy = body["proxy"],
             ip = body["ip"],
             port = body["port"],
@@ -189,4 +205,5 @@ class RotatingProxyClient(ProxyFetcherAPI):
 class RotatingProxyException(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)        
+
     
