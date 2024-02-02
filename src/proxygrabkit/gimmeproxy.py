@@ -80,17 +80,23 @@ class GimmeProxyClient(ProxyFetcherAPI):
         - 'maxCheckPeriod' (integer [seconds]): Return only proxies checked in last maxCheckPeriod seconds
         Note: See https://gimmeproxy.com/#api for more details
         """
-
+        
+        self.clear_params()
+        
         # change name for user agent
         if "user_agent" in kwargs.keys():
             kwargs["user-agent"] = kwargs["user_agent"]
             kwargs.pop("user_agent")
+            
+        if "user_agent" in filter.keys():
+            filter["user-agent"] = filter["user_agent"]
+            filter.pop("user_agent")
 
         # include api_key
         if self._api_key is not None:
-            self._params.update({"api_key": self._api_key})
-
-        return self.set_params(kwargs=kwargs)
+            kwargs.update({"api_key": self._api_key})
+                
+        return self.set_params(params=filter, **kwargs)
 
 
     def get_proxy(self) -> ProxyGP:
