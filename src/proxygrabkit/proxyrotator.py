@@ -128,7 +128,8 @@ class RotatingProxyClient(ProxyFetcherAPI):
         
         
         """
-        return self.set_params(filter, kwargs=kwargs)
+        self.clear_params()
+        return self.set_params(filter, **kwargs)
 
     def get_proxy(self, filter: Dict[str, Any] = None) -> ProxyRP:
         """Gets a proxy from the API.
