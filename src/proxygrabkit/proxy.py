@@ -59,6 +59,9 @@ class ProxyFetcherAPI(ProxyFetcher):
         self._valid_params = valid_params
         self._params = {}
 	
+    def clear_params(self):
+        self._params.clear()
+ 
     def set_params(self, params: Dict[str, Any] = {}, **kwargs) -> dict:
         """
         Set params for api call
@@ -66,7 +69,6 @@ class ProxyFetcherAPI(ProxyFetcher):
         :kwargs dictionary with params used for request.
 
         """
-        self._params = {}
         for k, v in params.items():
             if k in self._valid_params:
                 self._params.update({k: v})
