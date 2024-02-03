@@ -1,11 +1,9 @@
 # ProxyGrabKit
 
-
 [![PyPI version](https://badge.fury.io/py/proxygrabkit.svg)](https://badge.fury.io/py/proxygrabkit)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A useful python package to obtain proxies using 
-
+A useful python package to obtain free proxies using several services.
 
 ## Description
 
@@ -14,7 +12,7 @@ Your Python package for retrieving internet proxy servers using free services.
 ### Features
 
 - **GimmeProxy.com Integration**: Fetch proxies from GimmeProxy service.
-- **ProxyRotator.com Integration**: Obtain rotating proxies using the ProxyRotator API.
+- **ProxyRotator.com Integration**: Fetch proxies using the ProxyRotator API.
 
 ## Installation
 
@@ -57,6 +55,7 @@ print( proxy.lastChecked )
 ```
 
 ## More examples
+
 See examples folder for more complex examples
 
 ## Future Plans
