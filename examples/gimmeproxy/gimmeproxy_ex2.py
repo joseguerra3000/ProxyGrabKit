@@ -7,7 +7,7 @@ from proxygrabkit import GimmeProxyClient
 proxy_fetcher = GimmeProxyClient()
 
 # Set filter for fetcher
-proxy_fetcher.set_filter( get = True, supportsHttps=True )
+proxy_fetcher.set_filter( get = True, supportsHttps=True,  )
 
 # Get a random proxy
 proxy = proxy_fetcher.get_proxy()

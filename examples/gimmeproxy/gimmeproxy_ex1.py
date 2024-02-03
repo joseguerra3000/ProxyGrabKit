@@ -9,6 +9,9 @@ proxy_fetcher = GimmeProxyClient()
 # Get a random proxy
 proxy = proxy_fetcher.get_proxy()
 
+print( proxy.proxy )
+print( proxy.lastChecked )
+
 #print all properties 
 for k,v in proxy.__dict__.items():
     print( f'{k}: {v}' )
