@@ -60,9 +60,13 @@ See examples folder for more complex examples
 
 ## Future Plans
 
-- [ ] Support for <www.proxy-list.download>: Add functionality to retrieve proxies from this service.
-- [ ] Support for <https://www.sslproxies.org/>: Incorporate support for SSL proxies from this source.
+- [ ] Support for <https://www.proxy-list.download/api/v1>: Add functionality to retrieve proxies from this service.
+- [ ] Support for <https://www.sslproxies.org/>: Incorporate support for SSL proxies from this source (SEE class="modal-body")
+- [ ] Support for <https://www.us-proxy.org/>
+- [ ] Support for <https://free-proxy-list.net/anonymous-proxy.html>
+- [ ] Support for <https://www.my-proxy.com/free-proxy-list.html>
 - [ ] Continuous Improvement and New Service Additions: Regularly update and add support for new proxy services.
+- [ ] Add more examples
 
 ## Contribution
 
