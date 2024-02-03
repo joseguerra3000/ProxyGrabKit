@@ -31,16 +31,38 @@ pip install proxygrabkit
 ```py
 from proxygrabkit import GimmeProxyClient
 
+# Declare a object of type GimmeProxyClient
+proxy_fetcher = GimmeProxyClient()
+
+# Get a random proxy
+proxy = proxy_fetcher.get_proxy()
+
+print( proxy.proxy )
+print( proxy.lastChecked )
 
 ```
 
 ### Fetching proxies from ProxyRotator.com
 
+```py
+from proxygrabkit import RotatingProxyClient
+
+proxy_fetcher = RotatingProxyClient(api_key='xxxxxxxxxxxxxxxxxx')
+
+proxy = proxy_fetcher.get_proxy()
+
+print( proxy.proxy )
+print( proxy.lastChecked )
+
+```
+
+## More examples
+See examples folder for more complex examples
 
 ## Future Plans
 
-- [ ] Support for www.proxy-list.download: Add functionality to retrieve proxies from this service.
-- [ ] Support for https://www.sslproxies.org/: Incorporate support for SSL proxies from this source.
+- [ ] Support for <www.proxy-list.download>: Add functionality to retrieve proxies from this service.
+- [ ] Support for <https://www.sslproxies.org/>: Incorporate support for SSL proxies from this source.
 - [ ] Continuous Improvement and New Service Additions: Regularly update and add support for new proxy services.
 
 ## Contribution
