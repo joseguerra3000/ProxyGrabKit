@@ -64,7 +64,7 @@ class TestRotatingProxy(unittest.TestCase):
         rotator = RotatingProxyClient(api_key=API_KEY)
         self.assertIsNone( rotator.remaining_requests )
         
-        proxy = rotator.get_proxy()
+        rotator.get_proxy()
         
         self.assertIsNotNone( rotator.remaining_requests )
 

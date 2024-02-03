@@ -1,18 +1,14 @@
-import logging
 import os
 import unittest
 import time
 
 from dotenv import load_dotenv
 from proxygrabkit import GimmeProxyClient
-from proxygrabkit.gimmeproxy import GimmeProxyException
 
 
 # LOAD SETTINGS
 load_dotenv()
 API_KEY = os.getenv("GIMME_PROXY_API_KEY", None)
-
-
 
 def dict_isin( a: dict, b: dict ) -> bool:
     for k,v in a.items():
@@ -54,17 +50,9 @@ class TestGimmeProxy(unittest.TestCase):
         
         for f in self._filters:
             f_ret = proxy_fetcher.set_filter( filter=f, maxCheckPeriod=60*60*24 )
-            #print(f'return: {f_ret}')
-            time.sleep(2)
+            time.sleep(2) # avoid Rate Limit.
             self.assertTrue( dict_isin( f, f_ret )  )
-            self.assertEqual( f_ret['maxCheckPeriod'], 60*60*24 )
-            
-
-    def test_remaining_requests(self):
-        '''Test that the returned proxy it's compatible with filter
-        '''
-        pass
-
+            self.assertEqual( f_ret['maxCheckPeriod'], 60*60*24 )            
 
 if __name__ == '__main__':
     unittest.main()
