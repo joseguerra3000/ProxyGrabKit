@@ -39,7 +39,7 @@ Issues = "https://github.com/joseguerra3000/ProxyGrabKit/issues"
 
 [tool.setuptools.dynamic]
 version = {attr = "proxygrabkit.VERSION"}
-readme = {file = ["README.md", "USAGE.rst"]}
+readme = {file = ["README.md", "USAGE.rst"], content-type = "text/markdown"}
 
 [tool.setuptools.packages.find]
 where = ["src"]  # list of folders that contain the packages (["."] by default)
