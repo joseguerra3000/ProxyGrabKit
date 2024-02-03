@@ -1,6 +1,5 @@
 import os
 import unittest
-import time
 
 from dotenv import load_dotenv
 from proxygrabkit import GimmeProxyClient
