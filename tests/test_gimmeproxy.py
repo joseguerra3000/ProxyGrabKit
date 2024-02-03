@@ -50,9 +50,21 @@ class TestGimmeProxy(unittest.TestCase):
         
         for f in self._filters:
             f_ret = proxy_fetcher.set_filter( filter=f, maxCheckPeriod=60*60*24 )
-            time.sleep(2) # avoid Rate Limit.
             self.assertTrue( dict_isin( f, f_ret )  )
             self.assertEqual( f_ret['maxCheckPeriod'], 60*60*24 )            
+
+    def test_get_proxy(self):
+        proxy_fetcher = GimmeProxyClient(api_key=API_KEY)
+        
+        proxy_fetcher.set_filter( get = True, supportsHttps=True )
+        
+        proxy = proxy_fetcher.get_proxy()
+        
+        self.assertEqual( proxy.source, 'Gimmeproxy API' )
+        self.assertTrue( proxy.get )
+        self.assertTrue( proxy.supportsHttps )
+
+        
 
 if __name__ == '__main__':
     unittest.main()
