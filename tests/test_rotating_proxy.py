@@ -1,37 +1,73 @@
-from proxygrabkit import RotatingProxyClient
-from proxygrabkit.proxyrotator import RotatingProxyException
-#from proxygrabkit.proxy import ProxyFetcherAPI
-from dotenv import load_dotenv
+import logging
 import os
+import unittest
+
+from dotenv import load_dotenv
+from proxygrabkit import RotatingProxyClient
 
 # LOAD SETTINGS
 load_dotenv()
-API_KEY = os.getenv( 'ROTATING_PROXY_API_KEY' )
+API_KEY = os.getenv("ROTATING_PROXY_API_KEY")
 
 if API_KEY is None:
-    raise Exception( 'API_KEY must ve provided.' )
+    raise Exception("API_KEY must ve provided.")
 
-rotator = RotatingProxyClient( api_key=API_KEY )
-
-
-print(f'Using apiKey: {rotator.api_key}')
-
-#rotator.set_filter( get=True, https=True )
-rotator.set_filter( filter = { 
-                        'get': True, # Proxy supports GET requests 
-                        'city': 'New York', # Return only proxies from New York City	
-                        }
-                    )
-try:
-    proxy_info = rotator.get_proxy()
-except RotatingProxyException as e:
-    print(e)
+logging.basicConfig(filename=f"{__package__}.log")
 
 
-for i in range(20):
-    proxy_info = rotator.get_proxy()
-    print( proxy_info.proxy )
-    print( f'{proxy_info.city}, {proxy_info.country}' )
-    print( proxy_info.connectionType )
-    print( rotator.remaining_requests )
-    print( '-----------------------' )
+def dict_isin( a: dict, b: dict ) -> bool:
+    for k,v in a.items():
+        if k not in b:
+            return False
+        if b[k] != v:
+            return False
+    
+    return True
+
+
+class TestRotatingProxy(unittest.TestCase):
+    def __init__(self, methodName: str = "runTest") -> None:
+        super().__init__(methodName)
+        self._filters = [
+            {
+                "get": True,  
+                "referer": True,
+                "country": "US",
+            },
+            {
+                "get": True,  # Proxy supports GET requests
+                "city": "New York",  # Return only proxies from New York City
+            },
+            {
+                "get": True,  # Proxy supports GET requests
+                "userAgent": True,
+                "connectionType": 'Residential',  
+            },
+            {
+                "get": True,  # Proxy supports GET requests
+                "post": True,
+            },
+        ]
+
+    def test_filters_assignment(self):
+        '''Test that filters are assigned correctly.
+        '''
+        rotator = RotatingProxyClient(api_key=API_KEY)
+        
+        for f in self._filters:
+            f_ret = rotator.set_filter( filter=f )
+            self.assertTrue( dict_isin( f, f_ret ) )
+
+    def test_remaining_requests(self):
+        '''Test that the returned proxy it's compatible with filter
+        '''
+        rotator = RotatingProxyClient(api_key=API_KEY)
+        self.assertIsNone( rotator.remaining_requests )
+        
+        proxy = rotator.get_proxy()
+        
+        self.assertIsNotNone( rotator.remaining_requests )
+
+
+if __name__ == "__main__":
+    unittest.main()
