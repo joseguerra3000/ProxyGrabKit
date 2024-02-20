@@ -1,3 +1,7 @@
+""" Module for utilizing the https://gimmeproxy.com/ API to fetch proxies.
+
+
+"""
 
 from .proxy import ProxyFetcherAPI, ProxyData
 from typing import Optional, Dict, Any
@@ -5,30 +9,38 @@ from dataclasses import dataclass
 
 @dataclass
 class ProxyGP(ProxyData):
-    '''Represent the information returned for a call to GimmeProxy API
+    """Represent the information returned for a call to GimmeProxy API.
 
-    Attributes (see Proxy class for more attributes):
-        - 'supportsHttps'https support
-        - 'protocol' (str): Proxy protocol
-        - 'anonymityLevel' (int): Anonymity level, 1 - anonymous, 0 - not anonymous
-        - 'websites' (dict): websites working through this proxy    
-        - 'curl' (str): ready to use CURLOPT_PROXY option
-        - 'type' (str): proxy protocol
-        - 'speed' (int): proxy speed 
-    '''
+    .. note::
+        See :class:`proxygrabkit.proxy.ProxyData` class for more attributes.
+    """
+    
     supportsHttps: bool
+    """Indicates whether the proxy supports HTTPS."""
+    
     protocol: str
+    """The protocol used by the proxy."""
+    
     anonymityLevel: int
+    """An integer representing the anonymity level of the proxy."""
+    
     websites: dict
+    """A dictionary containing websites supported by the proxy."""
+    
     curl: str
-#    type: str -- check this
+    """A string representing the curl command for the proxy."""
+    
     speed: int
+    """The speed of the proxy."""
+    
 
 class GimmeProxyClient(ProxyFetcherAPI):
-    """
-    Use https://gimmeproxy.com/ api for get proxies.
-    """
+    """A client for utilizing the https://gimmeproxy.com/ API to fetch proxies.
 
+    :param api_key: , API key for accessing the GimmeProxy API.
+    :type api_key: Optional[str]
+    """
+    
     def __init__(self, api_key: Optional[str] = None) -> None:
         super().__init__(
             api_endpoint="https://gimmeproxy.com/api/getProxy",
@@ -57,28 +69,32 @@ class GimmeProxyClient(ProxyFetcherAPI):
             self._params.update({"api_key": api_key})
 
     def set_filter(self, filter: Dict[str, Any] = {}, **kwargs) -> Dict[str, Any]:
-        """
-        Parameters
-        ----------
-        `filter`: dict
-            A dict with the desired filters for the proxy.
-        `**kwargs`:
-            Filters indicated individually
+        """Set filters for fetching proxies.
         
-        Note 1: Valid options for filter and **kwargs
-        - 'get' (bool): Proxy supports GET requests
-        - 'post' (bool): Proxy supports POST requests
-        - 'cookies' (bool): Proxy supports cookies
-        - 'referer' (bool): Proxy supports referer header
-        - 'user-agent' or 'user_agent' (bool): Proxy supports user-agent header
-        - 'supportsHttps' (bool): return only proxies with HTTPS support
-        - 'anonymityLevel' (int): Anonymity level, 1 - anonymous, 0 - not anonymous
-        - 'port' (integer): Return only proxies with specified port
-        - 'country' (string): Return only proxies with specified country/countries
-        - 'notCountry' (string): Exclude proxies from some country from search
-        - 'minSpeed' (float [kb]): Return only proxies with speed more than specified in KB
-        - 'maxCheckPeriod' (integer [seconds]): Return only proxies checked in last maxCheckPeriod seconds
-        Note: See https://gimmeproxy.com/#api for more details
+        :param dict filter: A dictionary with desired filters for the proxy.
+        :param dict \*\*kwargs: Filters indicated individually.
+        
+        :return: Updated parameters for fetching proxies.
+        :rtype: Dict[str, Any]
+        
+        .. note:: 
+        
+            Valid options for filter and \*\*kwargs:
+            
+                - 'get' (bool): Proxy supports GET requests
+                - 'post' (bool): Proxy supports POST requests
+                - 'cookies' (bool): Proxy supports cookies
+                - 'referer' (bool): Proxy supports referer header
+                - 'user-agent' or 'user_agent' (bool): Proxy supports user-agent header
+                - 'supportsHttps' (bool): return only proxies with HTTPS support
+                - 'anonymityLevel' (int): Anonymity level, 1 - anonymous, 0 - not anonymous
+                - 'port' (integer): Return only proxies with specified port
+                - 'country' (string): Return only proxies with specified country/countries
+                - 'notCountry' (string): Exclude proxies from some country from search
+                - 'minSpeed' (float [kb]): Return only proxies with speed more than specified in KB
+                - 'maxCheckPeriod' (integer [seconds]): Return only proxies checked in last maxCheckPeriod seconds
+            
+            See https://gimmeproxy.com/#api for more details
         """
         
         self.clear_params()
@@ -100,6 +116,11 @@ class GimmeProxyClient(ProxyFetcherAPI):
 
 
     def get_proxy(self) -> ProxyGP:
+        """Fetch a proxy from the GimmeProxy service.
+
+        :return: A Proxy server instance.
+        :rtype: :class:`proxygrabkit.gimmeproxy.ProxyGP`
+        """
         
         body = self._request_proxy(format='JSON')
         
@@ -133,5 +154,19 @@ class GimmeProxyClient(ProxyFetcherAPI):
         )
 
 class GimmeProxyException(Exception):
+    """
+    Exception raised for errors related to the GimmeProxyClient.
+
+    Inherits from the base Exception class.
+
+    :param \*args: Variable-length argument list.
+    """
+    
     def __init__(self, *args: object) -> None:
+        """
+        Initialize the GimmeProxyException instance.
+
+        :param \*args: object, Variable-length argument list.
+        """
+        
         super().__init__(*args)        
